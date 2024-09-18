@@ -11,8 +11,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Include the City/State pages generator file
 require_once plugin_dir_path(__FILE__) . 'generate-city-state-pages.php';
 
-// Include the State page handler file
 require_once plugin_dir_path(__FILE__) . 'state-page-handler.php';

@@ -1,3 +1,4 @@
+<!-- This .php handles all the shortcodes -->
 <?php
 
 function get_state_abbreviation($state_name) {
@@ -108,12 +109,10 @@ function city_st_shortcode() {
     }
 
     if ($location_meta['location_type'] === 'city-state') {
-        // Assuming the format "City, State" for the location_name
         list($city, $state) = explode(',', $location_meta['location_name'], 2);
         $abbreviation = get_state_abbreviation(trim($state));
         return ucwords(str_replace('-', ' ', trim($city))) . ', ' . strtoupper($abbreviation);
     } elseif ($location_meta['location_type'] === 'state') {
-        // For state posts, just return the state name
         return ucwords($location_meta['location_name']);
     }
 
@@ -137,17 +136,14 @@ function location_usa_shortcode() {
     $location_type = get_post_meta($post->ID, 'location_type', true);
     $location_name = get_post_meta($post->ID, 'location_name', true);
 
-    // If it's not a single post or page, or no location type is defined, return a default message or empty.
     if (empty($location_type) || !is_single() && !is_page()) {
         return "Not available outside of posts/pages.";
     }
 
-    $location_usa = 'USA'; // Default value
+    $location_usa = 'USA';
     if ($location_type === 'city-state') {
-        // Assuming location_name is stored in format "City, State"
         $location_usa = "{$location_name}, USA";
     } elseif ($location_type === 'state') {
-        // Assuming location_name is just the "State"
         $location_usa = "{$location_name}, USA";
     }
 
@@ -168,18 +164,15 @@ function generate_links($atts) {
     ];
 
     if ($location_meta['location_type'] === 'city-state') {
-        // Fetch other cities within the same state
         $state = explode(',', $location_meta['location_name'])[1] ?? '';
         $query_args['tag'] = sanitize_title(trim($state));
         $query_args['category_name'] = 'cities';
     } elseif ($location_meta['location_type'] === 'state') {
-        // Fetch cities within this state
         $state = $location_meta['location_name'];
         $state_slug = sanitize_title(trim($state));
         $query_args['tag'] = $state_slug;
         $query_args['category_name'] = 'cities';
     } elseif (is_front_page()) {
-        // Fetch all states for the main page
         $query_args['category_name'] = 'states';
         unset($query_args['tag']);
     }
@@ -189,7 +182,6 @@ function generate_links($atts) {
         return sprintf('<li><a href="%s">%s</a></li>', get_permalink($post->ID), get_the_title($post->ID));
     }, $query->posts);
 
-    // Divide links into 6 parts
     $total_links = count($links);
     $links_per_part = ceil($total_links / 6);
     $part_links = array_slice($links, ($part - 1) * $links_per_part, $links_per_part);

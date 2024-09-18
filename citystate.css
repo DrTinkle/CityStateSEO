@@ -1,30 +1,30 @@
 .seo-wrap {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #333;
-    max-width: 600px;
-    margin-left: 5%; /* Adjust this percentage to control the distance from the left */
-    margin-right: auto; /* Keeps the right margin automatic */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #333;
+  max-width: 600px;
+  margin-left: 5%;
+  margin-right: auto;
 }
 
 .nav-tab-seo-wrapper {
-    display: flex; /* Ensures tabs are aligned in a row */
-    border-bottom: 1px solid #ccc; /* Adds a subtle line under the tabs for separation */
-    margin-bottom: 20px; /* Adds some space between the tabs and the content below */
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
 }
 
 .seo-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Spacing between form elements */
-    background-color: #ffffff; /* White background */
-    padding: 15px; /* Spacing inside the form */
-    border: 2px solid #0073aa; /* WordPress primary color for the border */
-    border-radius: 5px; /* Rounded corners for the form */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Slightly more pronounced shadow for the form */
-    font-size: 16px; /* Slightly larger font size for readability */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 15px;
+  border: 2px solid #0073aa;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
 }

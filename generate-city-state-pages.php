@@ -78,12 +78,9 @@ function upload_state_flags_and_save_ids() {
 
     foreach ($states as $state) {
         $state_slug = sanitize_title_with_dashes($state);
-        // This gives you the absolute filesystem path to the flag image
         $flag_path = plugin_dir_path(__FILE__) . "state-flags/{$state_slug}.webp";
-        // This is correct for the URL
         $flag_url = plugins_url("/state-flags/{$state_slug}.webp", __FILE__);
     
-        // Now this check should correctly determine if the file exists
         if (file_exists($flag_path)) {
             $attachment_id = media_sideload_image($flag_url, 0, $state . " Flag", 'id');
     
@@ -144,7 +141,7 @@ function business_info_form() {
         'TravelAgency' => 'Travel Agency',
     );
 
-    // Form HTML begins here
+
     ?>
     <div class="seo-wrap">
 
@@ -280,7 +277,6 @@ function city_state_posts() {
     // Determine which tab is currently active based on the 'tab' URL parameter
     $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'generate_states';
 
-    // HTML for the page header and navigation tabs
     ?>
     <div class="seo-wrap">
         <h1>City/State-Based SEO Structure Generator</h1>
@@ -299,7 +295,6 @@ function city_state_posts() {
         <?php
         // Handle the action based on the form submission or active tab
         if (isset($_POST['action'])) {
-            // Switch between different actions based on form submissions
             switch($_POST['action']){
                 case 'generate_state_posts':
                     generate_state_posts();
@@ -315,7 +310,6 @@ function city_state_posts() {
                     break;
             }
         } else {
-            // Display the appropriate form based on the currently active tab
             switch($active_tab){
                 case 'generate_states':
                     generate_state_posts_form();
@@ -347,7 +341,6 @@ function insert_json_ld() {
     if (is_single() || is_front_page()) {
         $business_info = get_option('saved_business_info', []);
         
-        // Base JSON-LD structure
         $json_ld = [
             "@context" => "https://schema.org",
             "@type" => $business_info['business_type'] ?? '',
@@ -358,20 +351,17 @@ function insert_json_ld() {
         ];
 
         if (is_single()) {
-            // Additional details specific to posts
             $location_type = get_post_meta($post->ID, 'location_type', true);
             $location_name = get_post_meta($post->ID, 'location_name', true);
             $schema_identifier = get_post_meta($post->ID, 'schema_identifier', true);
             $featured_image_url = get_the_post_thumbnail_url($post->ID, 'full');
 
-            // Append location-specific info to the name if available
             $json_ld["name"] .= isset($location_name) ? " in " . $location_name : '';
             $json_ld["identifier"] = $schema_identifier;
             if ($featured_image_url) {
-                $json_ld["image"] = $featured_image_url; // Add featured image URL
+                $json_ld["image"] = $featured_image_url;
             }
 
-            // Customize description to include product/service and location
             $product_service = $business_info['business_service'] ?? 'our services';
             $additional_description = ('state' === $location_type) ?
                 " Specializing in {$product_service} across {$location_name}." :
@@ -389,7 +379,6 @@ function insert_json_ld() {
 }
 add_action('wp_head', 'insert_json_ld');
 
-// Displays a form for generating posts for each state
 function generate_state_posts_form() {
     ?>
     <div class="seo-wrap">
@@ -458,7 +447,6 @@ function generate_state_posts_form() {
 
 // Handles the generation of state-specific posts based on the form inputs
 function generate_state_posts() {
-    // Check if the generate state posts action was triggered
     if (isset($_POST['action']) && $_POST['action'] === 'generate_state_posts') {
         $posts_created = 0; // Counter for tracking number of posts created
 
@@ -491,7 +479,7 @@ function generate_state_posts() {
             $post_categories[] = $category_id;
         }
 
-        // Load state names from a CSV file
+        // Load state names from the CSV file
         $csvFile = plugin_dir_path(__FILE__) . 'usstates.csv';
         $lines = file($csvFile);
         $states = [];
@@ -510,7 +498,7 @@ function generate_state_posts() {
         // Retrieve saved business info for inclusion in posts
         $business_info = get_option('saved_business_info', []);
 
-        // Generate a post for each state with customized content
+        // Generate a post for each state with the customized content
         foreach ($states as $state) {
             $post_title = $post_title_prefix . ' ' . $state;
             $flag_id = get_flag_id($state);
@@ -551,7 +539,6 @@ function generate_state_posts() {
             }
         }
 
-        // Feedback
         if ($posts_created > 0) {
             echo '<div class="updated notice notice-success is-dismissible"><p>' . 
                 $posts_created . ' state posts generated successfully.</p></div>';
@@ -561,7 +548,6 @@ function generate_state_posts() {
     }
 }
 
-// Displays the form for generating city-specific posts
 function generate_city_posts_form() {
     ?>
     <div class="seo-wrap">
@@ -639,11 +625,8 @@ function generate_city_posts_form() {
     <?php
 }
 
-// Handles the generation and publishing of posts based on the form data
 function generate_city_posts() {
-    // Check if the generate city posts action was triggered
     if (isset($_POST['action']) && $_POST['action'] === 'generate_city_posts') {
-        
         $posts_created = 0; // Track the number of posts successfully created
 
         // Sanitize and store form inputs
@@ -675,7 +658,7 @@ function generate_city_posts() {
             $post_categories[] = $category_id;
         }
 
-        // Load state names from a CSV file
+        // Load state names from the CSV file
         $csvFile = plugin_dir_path(__FILE__) . 'uscities.csv';
         $lines = file($csvFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $processed = 0;
@@ -736,7 +719,6 @@ function generate_city_posts() {
             }
         }
 
-        // Feedback
         if ($posts_created > 0) {
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html($posts_created) . ' city posts generated successfully.</p></div>';
         } else {
@@ -745,7 +727,6 @@ function generate_city_posts() {
     }
 }
 
-// Displays the form for generating article posts
 function generate_articles_form() {
     ?>
     <div class="seo-wrap">
@@ -830,7 +811,6 @@ function generate_articles_form() {
 
 // Generate article posts based on the selected scope: state or city-state
 function generate_articles() {
-    // Check if the generate_articles action was triggered
     if (isset($_POST['action']) && $_POST['action'] === 'generate_articles') {
         $title = sanitize_text_field($_POST['article_title']);
         $suffix = sanitize_text_field($_POST['title_suffix']);
@@ -862,7 +842,7 @@ function generate_articles() {
             $post_category_ids[] = $user_specified_category_id;
         }
 
-        // Load state or city names from a CSV file
+        // Load state or city names from the CSV file
         $csvFile = plugin_dir_path(__FILE__) . 'uscities.csv';
         $lines = file($csvFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
@@ -920,12 +900,10 @@ function generate_articles() {
             }
         }
 
-        // Feedback
         echo '<div class="updated"><p>Article generation process completed. ' . $articlesCreated . ' articles were created.</p></div>';
     }
 }
 
-// Displays the form for deleting posts based on specific criteria
 function delete_custom_form() {
     ?>
     <div class="seo-wrap">
@@ -995,7 +973,6 @@ function delete_custom_form() {
 
 // Handles the deletion of posts based on the field data
 function process_custom_deletion() {
-    // Check if the deletion form was submitted
     if (isset($_POST['action']) && $_POST['action'] === 'delete_custom') {
         // Sanitize input data
         $post_type = sanitize_text_field($_POST['post_type']);
@@ -1003,7 +980,7 @@ function process_custom_deletion() {
         $tags = sanitize_text_field($_POST['tags']);
         $author = !empty($_POST['author']) ? intval($_POST['author']) : '';
         $batch_size = !empty($_POST['batch_size']) ? intval($_POST['batch_size']) : 500;
-        $delay = 500000; // Delay to prevent server overload, in microseconds
+        $delay = 500000; // Delay to prevent server overload
 
         $total_posts_deleted = 0; // Initialize counter for deleted posts
 
@@ -1049,7 +1026,6 @@ function process_custom_deletion() {
 
         } while ($posts_deleted > 0); // Repeat if there were posts deleted in the last batch.
 
-        // Feedback
         if ($total_posts_deleted > 0) {
             echo '<div class="updated"><p>Deletion process completed. Total posts deleted: ' . esc_html($total_posts_deleted) . '.</p></div>';
         } else {
@@ -1125,7 +1101,6 @@ function custom_post_types_form() {
     <?php
 }
 
-// Handle deletion if the form is submitted
 add_action('admin_init', 'delete_custom_post_type_handler');
 function delete_custom_post_type_handler() {
     if (isset($_POST['delete_cpt']) && check_admin_referer('delete_custom_post_type_action', 'delete_custom_post_type_nonce')) {
@@ -1154,7 +1129,6 @@ function add_custom_post_type() {
 
         $post_type_slug = sanitize_title_with_dashes($post_type);
 
-        // Skip if the post type is 'post' or if the slug is empty
         if ($post_type_slug === 'post' || empty($post_type_slug)) {
             add_action('admin_notices', function() {
                 echo '<div class="notice notice-error is-dismissible"><p>Invalid post type specified. Please try again.</p></div>';
@@ -1178,10 +1152,8 @@ function add_custom_post_type() {
         $custom_post_types[] = ['singular' => $post_type_slug, 'plural' => $post_type_plural, 'rewrite' => $rewrite_rule];
         update_option('custom_post_types_for_urls', $custom_post_types);
 
-        // Flush rewrite rules after adding a new post type
         flush_rewrite_rules();
 
-        // Provide feedback that the new post type was added successfully
         add_action('admin_notices', function() {
             echo '<div class="notice notice-success is-dismissible"><p>New custom post type added successfully.</p></div>';
         });
@@ -1190,14 +1162,13 @@ function add_custom_post_type() {
 
 add_action('init', 'register_custom_post_types_from_option');
 function register_custom_post_types_from_option() {
-    // Retrieve the list of custom post types from the option
+
     $custom_post_types = get_option('custom_post_types_for_urls', []);
 
     foreach ($custom_post_types as $cpt) {
         $post_type = $cpt['singular'];
         $post_type_plural = $cpt['plural'];
 
-        // Define labels for the post type for a more user-friendly admin interface
         $labels = array(
             'name'                  => _x($post_type, 'Post Type General Name', 'text_domain'),
             'singular_name'         => _x($post_type, 'Post Type Singular Name', 'text_domain'),
@@ -1228,7 +1199,6 @@ function register_custom_post_types_from_option() {
             'filter_items_list'     => __('Filter items list', 'text_domain'),
         );
 
-        // Define arguments for the post type
         $args = array(
             'labels'             => $labels,
             'public'             => true,
