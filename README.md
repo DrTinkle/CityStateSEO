@@ -1,4 +1,4 @@
-# City/State SEO Plugin
+# City/State SEO Plugin for Wordpress
 
 ## About the City/State SEO Plugin
 
